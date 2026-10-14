@@ -43,10 +43,30 @@ $sudo blkid "$PART_TP2"
 #A.5. Configuración
 $UUID_REAL=""
 
-$cat <<EOF > /srv/tp2/config/tp2.config
-$ORIGEN=/srv/tp2/datos/
+$nano /srv/tp2/config/tp2.config
+#dentro del editor:
+$ORIGEN="/srv/tp2/datos/"
 $PUNTO_MONTAJE="/mnt/respaldo_tp2"
 $UUID_ESPERADO="${UUID_REAL}"
 $DESTINO_BACKUP="\${PUNTO_MONTAJE}/copias/tp2"
 $BASE_RESTAURACION=/srv/tp2/restauraciones"
-EOF
+
+#crear
+$echo "Subprocesos" > /srv/tp2/datos/config/entrada_a.config
+$chmod 640 /srv/tp2/datos/config/entrada_a.config
+
+$echo "Retornos" > /srv/tp2/datos/config/entrada_b.config
+$chmod 600 /srv/tp2/datos/config/entrada_b.config
+
+#enlace simbólico
+$ln -s /srv/tp2/datos/config/entrada_a.config /srv/tp2/datos/config/vigente.config
+
+#documentos de texto
+$touch informe_inicial.txt
+$touch conclusion.txt
+
+#con identificador de prueba
+$echo "ID PRUEBA TP2" > /srv/tp2/datos/.control
+
+#logs
+$
