@@ -62,8 +62,8 @@ $chmod 600 /srv/tp2/datos/config/entrada_b.config
 $ln -s /srv/tp2/datos/config/entrada_a.config /srv/tp2/datos/config/vigente.config
 
 #documentos de texto
-$touch informe_inicial.txt
-$touch conclusion.txt
+$echo "Informe Inicial" > /srv/tp2/datos/documentos/informe_inicial.txt
+$echo "Reporte Final" > /srv/tp2/datos/documentos/reorte_final.txt
 
 #con identificador de prueba
 $echo "ID PRUEBA TP2" > /srv/tp2/datos/.control
@@ -86,3 +86,5 @@ $nano /srv/tp2/datos/logs/operacion_02.log
 2026-09-30T09:03:00|WARN|repo|Cuota proxima al limite 
 2026-09-30T09:04:00|ERROR|backup|Copia interrumpida 
 2026-09-30T09:05:00|INFO|auth|Inicio de sesion correcto 
+
+
