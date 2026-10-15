@@ -69,4 +69,20 @@ $touch conclusion.txt
 $echo "ID PRUEBA TP2" > /srv/tp2/datos/.control
 
 #logs
-$
+$nano /srv/tp2/datos/logs/operacion_01.log
+#dentro del editor
+2026-09-30T08:00:00|INFO|auth|Inicio de sesion correcto 
+2026-09-30T08:01:00|WARN|auth|Intento fallido 
+2026-09-30T08:02:00|INFO|repo|Archivo recibido 
+2026-09-30T08:03:00|ERROR|repo|Escritura rechazada 
+2026-09-30T08:04:00|INFO|backup|Respaldo iniciado 
+2026-09-30T08:05:00|WARN|backup|Espacio reducido 
+
+$nano /srv/tp2/datos/logs/operacion_02.log
+#dentro del editor
+2026-09-30T09:00:00|INFO|auth|Sesion finalizada 
+2026-09-30T09:01:00|ERROR|auth|Cuenta bloqueada 
+2026-09-30T09:02:00|INFO|repo|Archivo consultado 
+2026-09-30T09:03:00|WARN|repo|Cuota proxima al limite 
+2026-09-30T09:04:00|ERROR|backup|Copia interrumpida 
+2026-09-30T09:05:00|INFO|auth|Inicio de sesion correcto 
