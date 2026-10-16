@@ -1,4 +1,10 @@
 # TP2
+#Registro del dispositivo
+$lsb_release -a
+$arch
+$id
+$whoami
+
 #Preparación 
 #A.1. Herramientas y directorios de trabajo
 $ command -v bash python 3 tar bzip2 losetup fdisk mkfs.ext4
@@ -61,6 +67,9 @@ $chmod 600 /srv/tp2/datos/config/entrada_b.config
 #enlace simbólico
 $ln -s /srv/tp2/datos/config/entrada_a.config /srv/tp2/datos/config/vigente.config
 
+#verificacion
+$ls -la /srv/tp2/datos/config
+
 #documentos de texto
 $echo "Informe Inicial" > /srv/tp2/datos/documentos/informe_inicial.txt
 $echo "Reporte Final" > /srv/tp2/datos/documentos/reorte_final.txt
@@ -86,5 +95,17 @@ $nano /srv/tp2/datos/logs/operacion_02.log
 2026-09-30T09:03:00|WARN|repo|Cuota proxima al limite 
 2026-09-30T09:04:00|ERROR|backup|Copia interrumpida 
 2026-09-30T09:05:00|INFO|auth|Inicio de sesion correcto 
+
+$ls -la /srv/tp2/datos
+
+#Respaldo de datos
+$sudo tar -czvpf /backups/respaldo_datos_$(date +%Y%m%d_%H%M%S).tar.gz /srv/tp2
+
+#Herramienta bash
+$#!/bin/bash
+$set -eou pipefail
+$RUTA_A="$(cd "(dirname "${BASH_SOURCE[0]}")" && pwd)" //obtener ruta absoluta
+$DIRECTORIO_R="$(cd "${RUTA_A}//.." && pwd)" //obtener directorio raiz
+$
 
 
