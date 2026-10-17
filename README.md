@@ -10,8 +10,8 @@ $whoami
 $ command -v bash python 3 tar bzip2 losetup fdisk mkfs.ext4
 
 $sudo install -d -o  "$USER" -g "$(id-gn)" -m 750 /srv/tp2
-$sudo mkdir -p /srv/tmp2/{bin,lib,config,reportes,restauraciones}
-$sudo mkdir -p /srv/tmp2/datos/{config,documentos,logs}
+$sudo mkdir -p /srv/tp2/{bin,lib,config,reportes,restauraciones}
+$sudo mkdir -p /srv/tp2/datos/{config,documentos,logs}
 
 #A.2. Imagen y dispositivo loop
 #Toma de Snapshot
@@ -34,7 +34,7 @@ w
 EOF
 
 #verificación 
-$sudo lbslk
+$sudo lsblk
 
 #A.4. Formateo
 $PART_TP2="${LOOP_TP2}P1"
@@ -49,13 +49,13 @@ $sudo blkid "$PART_TP2"
 #A.5. Configuración
 $UUID_REAL=""
 
-$nano /srv/tp2/config/tp2.config
+$nano /srv/tp2/config/tp2.conf
 #dentro del editor:
 $ORIGEN="/srv/tp2/datos/"
 $PUNTO_MONTAJE="/mnt/respaldo_tp2"
 $UUID_ESPERADO="${UUID_REAL}"
-$DESTINO_BACKUP="\${PUNTO_MONTAJE}/copias/tp2"
-$BASE_RESTAURACION=/srv/tp2/restauraciones"
+$DESTINO_BACKUP="${PUNTO_MONTAJE}/copias/tp2"
+$BASE_RESTAURACION="/srv/tp2/restauraciones"
 
 #crear
 $echo "Subprocesos" > /srv/tp2/datos/config/entrada_a.config
@@ -65,14 +65,15 @@ $echo "Retornos" > /srv/tp2/datos/config/entrada_b.config
 $chmod 600 /srv/tp2/datos/config/entrada_b.config
 
 #enlace simbólico
-$ln -s /srv/tp2/datos/config/entrada_a.config /srv/tp2/datos/config/vigente.config
+$cd /srv/tp2/datos/config
+$ln -s entrada_a.config vigente.config
 
 #verificacion
 $ls -la /srv/tp2/datos/config
 
 #documentos de texto
 $echo "Informe Inicial" > /srv/tp2/datos/documentos/informe_inicial.txt
-$echo "Reporte Final" > /srv/tp2/datos/documentos/reorte_final.txt
+$echo "Reporte Final" > /srv/tp2/datos/documentos/reporte final.txt
 
 #con identificador de prueba
 $echo "ID PRUEBA TP2" > /srv/tp2/datos/.control
@@ -103,9 +104,51 @@ $sudo tar -czvpf /backups/respaldo_datos_$(date +%Y%m%d_%H%M%S).tar.gz /srv/tp2
 
 #Herramienta bash
 $#!/bin/bash
-$set -eou pipefail
+$set -euo pipefail
 $RUTA_A="$(cd "(dirname "${BASH_SOURCE[0]}")" && pwd)" //obtener ruta absoluta
 $DIRECTORIO_R="$(cd "${RUTA_A}//.." && pwd)" //obtener directorio raiz
+$source "${DIRECTORIO_R}/config/tp2.conf"
+$source "${DIRECTORIO_R}/lib/comunes.sh"
+
+$accion="$1"
+$case "$accion" in
+$  reporte)
+$     "generando reporte..."
+$      hacer_reporte
+$      ;;
+$  backup)
+$     "generando respaldo..."
+$      hacer_backup
+$      ;;
+$  restaurar)
+$     "generando restauración..."
+$      hacer_restauracion
+$      ;;
+$  *)
+$     "opción no reconocida: $accion" >&2
+$      exit 1
+$      ;;
+$ esac
+
+$#!/bin/bash
+$set -euo pipefail
+$validar_montaje(){
+$find --mountpoint "$1" > /dev/null || {echo "ERROR: $1 no esta montado" >&2; return 1; }
+$[[ "$(findmnt -n -o UUID --mountpoint "$1")" == "$2" ]] || {echo "ERROR: UUID no coincide" >&2; return 1; }
+$}
+
+$hacer_reporte(){
+$local csv="${DIRECTORIO_R}/reportes/reporte_bash.csv"
+$mkdir -p "${DIRECTORIO_R}/reportes"
+$echo "servicio,nivel,cantidad" > "$csv"
+$for i in auth backup repo; do
+$for j in ERROR INFO; do
+$echo "${i},${j},$(grep -c "|${j}|${i}|"
+"${ORIGEN}/logs"/*.log || true) >> "$csv"
+$done
+$done
+$echo "reporte listo: $csv"
+$}
+
+$hacer_backup(){
 $
-
-
